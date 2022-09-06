@@ -1,1 +1,1 @@
-# qiita2slack
+# qiita4you
