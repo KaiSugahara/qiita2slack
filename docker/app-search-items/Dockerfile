@@ -9,7 +9,7 @@ ENV TZ=Asia/Tokyo
 
 # INSTALL LIBRARY(S)
 RUN pip3 install --upgrade pip
-RUN pip3 install pandas numpy requests sklearn Flask gunicorn
+RUN pip3 install pandas numpy requests scikit-learn Flask gunicorn
 
 # CHANGE WORKDIR
 WORKDIR /app
