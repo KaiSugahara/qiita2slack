@@ -9,7 +9,7 @@ ENV TZ=Asia/Tokyo
 
 # INSTALL LIBRARY(S)
 RUN pip3 install --upgrade pip
-RUN pip3 install pandas tqdm fasttext requests bs4 sklearn
+RUN pip3 install pandas tqdm fasttext requests bs4 scikit-learn
 
 # INSTALL MECAB
 RUN apt -y install mecab libmecab-dev mecab-ipadic-utf8
