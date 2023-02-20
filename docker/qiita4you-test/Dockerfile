@@ -2,7 +2,7 @@ FROM ubuntu:latest
 USER root
 
 # ADD FILES
-ADD ./docker/app-test/start.sh /
+ADD ./docker/qiita4you-test/start.sh /
 RUN chmod +rx /start.sh
 CMD ["/start.sh"]
 
