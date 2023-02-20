@@ -20,7 +20,7 @@ def index():
     if target_word == "":
         return jsonify({"message": "パラメータsが指定されていません。"}), 400
 
-    target_embedding = requests.post('http://app-fasttext:80/', json=[target_word])
+    target_embedding = requests.post('http://fasttext-vector-api:80/', json=[target_word])
     target_embedding = np.array(list(target_embedding.json().values()))
     target_embedding = target_embedding.mean(axis=0).reshape(1, -1)
 

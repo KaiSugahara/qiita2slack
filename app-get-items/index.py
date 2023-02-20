@@ -92,7 +92,7 @@ def update():
     df_count = (df_count.T / df_count.sum(axis=1)).T.fillna(0)
 
     # 単語の埋め込み行列を生成
-    df_words_embed = requests.post('http://app-fasttext:80/', json=df_count.columns.to_list())
+    df_words_embed = requests.post('http://fasttext-vector-api:80/', json=df_count.columns.to_list())
     df_words_embed = pd.DataFrame(df_words_embed.json()).T
 
     # 本文の埋め込み行列を生成
