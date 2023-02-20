@@ -2,25 +2,13 @@ version: '3'
 
 services:
 
-  app-fasttext:
+  qiita4you-search-items:
     build:
       context: .
-      dockerfile: ./docker/app-fasttext/Dockerfile
-    container_name: app-fasttext
+      dockerfile: ./docker/qiita4you-search-items/Dockerfile
+    container_name: qiita4you-search-items
     volumes:
-      - ./app-fasttext:/app:ro
-      - ./data:/data
-    restart: always
-    networks:
-      - fasttext-api-network
-
-  app-search-items:
-    build:
-      context: .
-      dockerfile: ./docker/app-search-items/Dockerfile
-    container_name: app-search-items
-    volumes:
-      - ./app-search-items:/app:ro
+      - ./qiita4you-search-items:/app:ro
       - ./data:/data
     restart: always
     environment:
@@ -28,73 +16,47 @@ services:
       LETSENCRYPT_HOST: qiita4you.fulfills.jp
       LETSENCRYPT_EMAIL: web@ksugahara.com
     networks:
-      - fasttext-api-network
-      - nginx-proxy-network
-    depends_on:
-      - app-fasttext
+      - default
+      - nginx-network
+      - fasttext-vector-api
 
-  app-get-items:
+  qiita4you-get-items:
     build:
       context: .
-      dockerfile: ./docker/app-get-items/Dockerfile
-    container_name: app-get-items
+      dockerfile: ./docker/qiita4you-get-items/Dockerfile
+    container_name: qiita4you-get-items
     volumes:
-      - ./app-get-items:/app:ro
+      - ./qiita4you-get-items:/app:ro
       - ./data:/data
     restart: always
     networks:
-      - fasttext-api-network
-    depends_on:
-      - app-fasttext
+      - default
+      - fasttext-vector-api
 
-  app-test:
+  qiita4you-test:
     build:
       context: .
-      dockerfile: ./docker/app-test/Dockerfile
+      dockerfile: ./docker/qiita4you-test/Dockerfile
       args:
         - YOUR_UID=1002
         - YOUR_GID=1002
         - CONTAINER_USER_NAME=user
-    container_name: app-test
+    container_name: qiita4you-test
     ports:
       - '22000:8888'
     volumes:
-      - ./app-test:/app
+      - ./qiita4you-test:/app
       - ./data:/data
     networks:
-      - fasttext-api-network
+      - default
     depends_on:
-      - app-fasttext
-
-  nginx-proxy:
-    image: jwilder/nginx-proxy:latest
-    container_name: nginx-proxy
-    ports:
-      - '80:80'
-      - '443:443'
-    volumes:
-      - ./certs:/etc/nginx/certs:ro
-      - /etc/nginx/vhost.d
-      - /usr/share/nginx/html
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-    restart: always
-    networks:
-      - nginx-proxy-network
-
-  nginx-letsencrypt:
-    image: jrcs/letsencrypt-nginx-proxy-companion:latest
-    container_name: nginx-letsencrypt
-    depends_on: 
-        - nginx-proxy
-    volumes:
-      - ./certs:/etc/nginx/certs
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    volumes_from:
-      - nginx-proxy
-    restart: always
-    networks:
-      - nginx-proxy-network
+      - qiita4you-search-items
+      - qiita4you-get-items
 
 networks:
-  fasttext-api-network:
-  nginx-proxy-network:
+  default:
+    name: qiita4you-network
+  nginx-network:
+    external: true
+  fasttext-vector-api:
+    external: true
