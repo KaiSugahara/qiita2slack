@@ -1,3 +1,4 @@
 /data
 /certs
 .ipynb_checkpoints
+*.db
