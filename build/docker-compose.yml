@@ -5,57 +5,34 @@ services:
   qiita4you-search-items:
     build:
       context: .
-      dockerfile: ./docker/qiita4you-search-items/Dockerfile
+      dockerfile: ./search-items/Dockerfile
     container_name: qiita4you-search-items
     volumes:
-      - ./qiita4you-search-items:/app:ro
-      - ./data:/data
+      - ./search-items/index.py:/app/index.py:ro
+      - ./db:/db
     restart: always
     environment:
       VIRTUAL_HOST: qiita4you.fulfills.jp
       LETSENCRYPT_HOST: qiita4you.fulfills.jp
       LETSENCRYPT_EMAIL: web@ksugahara.com
     networks:
-      - default
       - nginx-network
       - fasttext-vector-api
 
   qiita4you-get-items:
     build:
       context: .
-      dockerfile: ./docker/qiita4you-get-items/Dockerfile
+      dockerfile: ./get-items/Dockerfile
     container_name: qiita4you-get-items
     volumes:
-      - ./qiita4you-get-items:/app:ro
-      - ./data:/data
+      - ./get-items/index.py:/app/index.py:ro
+      - ./get-items/utils.py:/app/utils.py:ro
+      - ./db:/db
     restart: always
     networks:
-      - default
       - fasttext-vector-api
 
-  qiita4you-test:
-    build:
-      context: .
-      dockerfile: ./docker/qiita4you-test/Dockerfile
-      args:
-        - YOUR_UID=1002
-        - YOUR_GID=1002
-        - CONTAINER_USER_NAME=user
-    container_name: qiita4you-test
-    ports:
-      - '22000:8888'
-    volumes:
-      - ./qiita4you-test:/app
-      - ./data:/data
-    networks:
-      - default
-    depends_on:
-      - qiita4you-search-items
-      - qiita4you-get-items
-
 networks:
-  default:
-    name: qiita4you-network
   nginx-network:
     external: true
   fasttext-vector-api:
