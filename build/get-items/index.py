@@ -19,7 +19,7 @@ def update():
         データベースの初期化
     """
 
-    with sqlite3.connect('db/qiita.db') as con:
+    with sqlite3.connect('/db/qiita.db') as con:
         
         cur = con.cursor()
         
@@ -61,7 +61,7 @@ def update():
         df["created_at"] = pd.to_datetime(df["created_at"]).map(pd.Timestamp.timestamp).astype(int) # 作成日時をタイムスタンプに変換
         
         # SQLite3に保存
-        with sqlite3.connect('db/qiita.db') as con:
+        with sqlite3.connect('/db/qiita.db') as con:
 
             # dfのうち，既存のidを検索
             cur = con.cursor()
@@ -89,7 +89,7 @@ def update():
         タイトルを埋め込みに変換
     """
 
-    with sqlite3.connect('db/qiita.db') as con:
+    with sqlite3.connect('/db/qiita.db') as con:
         
         # 3日前のタイムスタンプ
         timestamp_three_days_ago = int(time.time()) - (60 * 60 * 24 * 3)
@@ -135,7 +135,7 @@ def update():
     df_title_embed = df_count.dot(df_words_embed)
 
     # SQLite3に保存
-    with sqlite3.connect('db/qiita.db') as con:
+    with sqlite3.connect('/db/qiita.db') as con:
 
         # 挿入
         df_title_embed.to_sql(
